@@ -1,9 +1,16 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 import { useState } from "react"
+import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function SignUpPage() {
+
+    const router=useRouter();
+    const [buttonDisabled,setButtonDisabled]=useState(false);
+    const [loading,setLoading]=useState(false);
 
     const [user,setUser]=useState({
         email:"",
@@ -12,7 +19,19 @@ export default function SignUpPage() {
     })
 
     const onSignUp=async()=>{
+        try {
+            setLoading(true);
+            const respose = await axios.post("/api/users/signup",user);
+            console.log("Sign Up Success",respose.data);
+            toast.success("Sign Up Success");
+            router.push("/login");
+        } catch (error:any) {
+            console.log("Sign Up Failed",error.message);
 
+            toast.error(error.message);
+        }finally{
+            setLoading(false);
+        }
     }
 
     return (
@@ -21,7 +40,7 @@ export default function SignUpPage() {
         <hr/>
         <label className="pt-2" htmlFor="username">Username</label>
         <input
-         className="p-2  border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
+         className="p-2 text-black border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
          placeholder="Username"
          type="text"
          id="username"
@@ -30,7 +49,7 @@ export default function SignUpPage() {
         />
         <label htmlFor="email">Email</label>
         <input
-         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
+         className="p-2  text-black border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
          placeholder="Email"
          type="text"
          id="email"
@@ -39,7 +58,7 @@ export default function SignUpPage() {
         />
         <label htmlFor="password">Password</label>
         <input
-         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
+         className="p-2 text-black border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
          placeholder="Password"
          type="password"
          id="password"

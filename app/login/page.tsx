@@ -1,9 +1,15 @@
 "use client"
 
+import axios from "axios";
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 import { useState } from "react"
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
+
+    const [loading,setLoading]=useState(false);
+    const router=useRouter();
 
     const [user,setUser]=useState({
         email:"",
@@ -11,7 +17,18 @@ export default function LoginPage() {
     })
 
     const onLogin=async()=>{
-
+        try {
+            setLoading(true);
+            const response = await axios.post("/api/users/login",user);
+            console.log("Login Success",response.data);
+            toast.success("Login Success");
+            router.push("/profile"); 
+        } catch (error:any) {
+            console.log("Login Failed",error.message);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -20,7 +37,7 @@ export default function LoginPage() {
         <hr/>
         <label className="pt-2" htmlFor="email">Email</label>
         <input
-         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
+         className="p-2 text-black border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
          placeholder="Email"
          type="text"
          id="email"
@@ -29,7 +46,7 @@ export default function LoginPage() {
         />
         <label htmlFor="password">Password</label>
         <input
-         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
+         className="p-2 text-black border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
          placeholder="Password"
          type="password"
          id="password"
