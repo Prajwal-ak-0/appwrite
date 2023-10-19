@@ -1,19 +1,19 @@
 import mongoose from "mongoose";
 
 const userSchema=new mongoose.Schema({
-    userName:{
+    username:{
         type:String,
         required:[true,"Please provide a username"],
         unique:true
     },
     email:{
         true:String,
-        required:[true,"Please provide Email"],
+        require,
         unique:true
     },
     password:{
         true:String,
-        required:[true,"Please provide password"],
+        require,
     },
     isVerified:{
         type:Boolean,

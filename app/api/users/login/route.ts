@@ -1,9 +1,6 @@
-import { connect } from "@/lib/db";
-import User from "@/models/UserModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
-
-connect();
+import { prisma } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +9,11 @@ export async function POST(request: NextRequest) {
 
     console.log(reqBody);
 
-    const user = await User.findOne({ email });
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
     if (!user) {
         console.log("User does exists");
