@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import { prisma } from "@/lib/db";
+import jwt from "jsonwebtoken";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-        console.log("User does exists");
+        console.log("User does not exists");
       return NextResponse.json(
         { message: "User does not exists" },
         { status: 400 }
@@ -30,6 +31,26 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
     }
+
+    const tokenData = {
+        id: user.id,
+        email: user.email,
+        username: user.username
+    }
+
+    const token = await jwt.sign(tokenData, process.env.JWT_SECRET!, {
+        expiresIn: "1d"
+    })
+
+    const response = NextResponse.json({
+      message:"Login successful",
+      success: true,
+    })
+    response.cookies.set("token", token, {
+        httpOnly: true
+    })
+
+    return response;
   
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

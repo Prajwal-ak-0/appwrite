@@ -57,7 +57,7 @@ export default function LoginPage() {
          className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-blue-500"
          onClick={onLogin}
         >
-            Sign Up
+            {loading?"Loading...":"Login"}
         </button>
         <Link href="/signup">
             Does not have an account? SignUp
